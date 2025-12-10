@@ -15,9 +15,11 @@ env:
   - REACT_APP_HEALTHCHECK_PATH
   - REACT_APP_FEATURE_FLAGS
   - REACT_APP_EXPERIMENTS_ENABLED
-installCommand: npm ci || npm install
-# Browsers are installed via package.json postinstall hook (playwright install --with-deps)
-startCommand: npm run start:pw
+installCommand: npm install && npx playwright install --with-deps
+buildCommand: npm install && npx tsc --noEmit && npm test -- --ci
+startCommand: npm run pw:ui
+testCommand: npm run pw
 notes: |
-  - start:pw launches Playwright UI. The CRA dev server is started/attached via playwright.config.ts webServer.
+  - Playwright UI is launched via "npm run pw:ui". The CRA dev server is started/attached via playwright.config.ts webServer.
+  - Browsers are installed during installCommand using "npx playwright install --with-deps".
   - CRA start is still available via "npm start" but the default preview uses Playwright UI.

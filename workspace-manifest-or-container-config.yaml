@@ -17,10 +17,13 @@ env:
   - REACT_APP_EXPERIMENTS_ENABLED
 installCommand: npm install
 buildCommand: npm install && npx tsc --noEmit && npm test -- --ci
-startCommand: npm run pw:ui
+startCommand: npm run pw:ui:xvfb
 testCommand: npm run pw
 notes: |
-  - Playwright UI is launched via "npm run pw:ui" which wraps the UI with xvfb for headless environments. The CRA dev server is started/attached via playwright.config.ts webServer.
+  - Playwright UI is launched via "npm run pw:ui:xvfb" which wraps the UI with xvfb for headless environments. The CRA dev server is started/attached via playwright.config.ts webServer.
   - Browsers are installed during postinstall via "playwright install --with-deps".
-  - If UI cannot start, use "npm run pw:headless" to run tests and view report with "npm run pw:report".
+  - If UI cannot start or hangs, use the non-UI flow:
+      1) npm run pw:headless  (generates HTML report)
+      2) npm run pw:serve-report  (serves the HTML report on 0.0.0.0)
+  - The report server binds on 0.0.0.0 for remote access.
   - CRA start is still available via "npm start" but the default preview uses Playwright UI.

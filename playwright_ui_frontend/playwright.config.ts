@@ -2,26 +2,37 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Configure Playwright to be robust in container/CI environments:
- * - Default to headless unless HEADED=true is set
- * - Disable Chromium sandbox for containers
+ * - Default to headless unless HEADLESS=false is set
+ * - Pin to Chromium channel for consistency
+ * - Disable GPU and sandbox, add zygote/dev-shm flags for stability
  * - Reuse existing CRA dev server if already running
  * - Increase webServer timeout to accommodate installs/startup in CI
- * - Prefer the Chromium channel for consistency
+ * - Reduce reporters to avoid extra processes in UI mode
+ * - Limit output persistence to reduce file handles
  */
-const headed = process.env.HEADED === 'true';
+const headless = process.env.HEADLESS !== 'false';
 const isCI = !!process.env.CI;
 
 export default defineConfig({
   testDir: './tests',
-  reporter: 'html',
+  // Keep reporters minimal by default to avoid extra child processes
+  reporter: [['list']],
+  preserveOutput: 'never',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
-    // Headless by default; allow headed via HEADED=true
-    headless: headed ? false : true,
-    channel: 'chromium',
+    // Headless by default; HEADLESS=false enables headed
+    headless,
     launchOptions: {
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      // Enforce Chromium and pass flags needed for headless containers
+      channel: 'chromium',
+      args: [
+        '--disable-gpu',
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-zygote'
+      ]
     }
   },
   webServer: {
@@ -30,12 +41,11 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 180000
   },
+  // Keep single default project (chromium) for stability; others can be enabled later
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], channel: 'chromium' }
-    },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } }
+    }
   ]
 });

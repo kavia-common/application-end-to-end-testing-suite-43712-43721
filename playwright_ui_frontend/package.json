@@ -9,16 +9,21 @@
   },
   "scripts": {
     "start": "react-scripts start",
+
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
 
-    "pw": "playwright test",
-    "pw:report": "playwright show-report",
+    "pw": "playwright test -c ./playwright.config.ts --reporter=list",
+    "pw:report": "playwright show-report --host 0.0.0.0",
 
-    "pw:ui:xvfb": "PW_XDG_OPEN=0 xvfb-run -a -s '-screen 0 1280x720x24' playwright test --ui",
+    "pw:ui:xvfb": "PW_XDG_OPEN=0 PW_DISABLE_GPU=1 PLAYWRIGHT_BROWSERS_PATH=0 HEADLESS=false xvfb-run -a -s '-screen 0 1280x720x24' playwright test --ui --config=playwright.config.ts",
     "pw:ui": "npm run pw:ui:xvfb",
-    "pw:headless": "PW_XDG_OPEN=0 playwright test --reporter=list",
+
+    "pw:headless": "PW_XDG_OPEN=0 PW_DISABLE_GPU=1 PLAYWRIGHT_BROWSERS_PATH=0 HEADLESS=true playwright test --config=playwright.config.ts --reporter=html",
+    "pw:serve-report": "playwright show-report --host 0.0.0.0",
+
+    "pw:diag": "node -e \"console.log(process.versions);\" && npx playwright --version && env | sort | grep -E \"^PW_|^PLAYWRIGHT|^HEADLESS|^DISPLAY|^XDG|^CI|^NODE_ENV\" || true && PW_XDG_OPEN=0 PW_DISABLE_GPU=1 PLAYWRIGHT_BROWSERS_PATH=0 HEADLESS=true xvfb-run -a playwright test -c ./playwright.config.ts -g smoke --reporter=list",
 
     "postinstall": "playwright install --with-deps || npx playwright install --with-deps || true"
   },

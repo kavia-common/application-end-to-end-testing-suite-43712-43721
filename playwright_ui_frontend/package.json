@@ -9,12 +9,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:pw": "playwright test --ui",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pw:ui": "playwright test --ui",
     "pw": "playwright test",
-    "pw:report": "playwright show-report"
+    "pw:report": "playwright show-report",
+    "postinstall": "playwright install --with-deps || npx playwright install --with-deps"
   },
   "eslintConfig": {
     "extends": "react-app"

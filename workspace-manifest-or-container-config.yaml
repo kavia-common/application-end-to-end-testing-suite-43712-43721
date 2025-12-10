@@ -1,0 +1,23 @@
+name: playwright_ui_frontend
+description: Frontend container configured to launch Playwright UI as the primary preview. CRA dev server is managed by Playwright webServer with reuseExistingServer enabled.
+root: application-end-to-end-testing-suite-43712-43721/playwright_ui_frontend
+env:
+  - REACT_APP_API_BASE
+  - REACT_APP_BACKEND_URL
+  - REACT_APP_FRONTEND_URL
+  - REACT_APP_WS_URL
+  - REACT_APP_NODE_ENV
+  - REACT_APP_NEXT_TELEMETRY_DISABLED
+  - REACT_APP_ENABLE_SOURCE_MAPS
+  - REACT_APP_PORT
+  - REACT_APP_TRUST_PROXY
+  - REACT_APP_LOG_LEVEL
+  - REACT_APP_HEALTHCHECK_PATH
+  - REACT_APP_FEATURE_FLAGS
+  - REACT_APP_EXPERIMENTS_ENABLED
+installCommand: npm ci || npm install
+# Browsers are installed via package.json postinstall hook (playwright install --with-deps)
+startCommand: npm run start:pw
+notes: |
+  - start:pw launches Playwright UI. The CRA dev server is started/attached via playwright.config.ts webServer.
+  - CRA start is still available via "npm start" but the default preview uses Playwright UI.

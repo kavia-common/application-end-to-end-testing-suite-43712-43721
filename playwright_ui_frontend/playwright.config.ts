@@ -1,11 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const isHeadless = process.env.HEADLESS !== 'false';
+
 export default defineConfig({
   testDir: './tests',
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry'
+    trace: 'on-first-retry',
+    headless: isHeadless
   },
   webServer: {
     command: 'PORT=3000 react-scripts start',

@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/application-end-to-end-testing-suite-43712-43721/playwright_ui_frontend"
+}

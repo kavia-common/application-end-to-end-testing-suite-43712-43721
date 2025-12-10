@@ -9,15 +9,18 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:pw": "sh -c 'command -v xvfb-run >/dev/null 2>&1 && xvfb-run -a playwright test --ui || playwright test --ui'",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pw:ui": "playwright test --ui",
-    "pw:ui:xvfb": "xvfb-run -a playwright test --ui",
+
     "pw": "playwright test",
     "pw:report": "playwright show-report",
-    "postinstall": "playwright install --with-deps || npx playwright install --with-deps"
+
+    "pw:ui:xvfb": "PW_XDG_OPEN=0 xvfb-run -a -s '-screen 0 1280x720x24' playwright test --ui",
+    "pw:ui": "npm run pw:ui:xvfb",
+    "pw:headless": "PW_XDG_OPEN=0 playwright test --reporter=list",
+
+    "postinstall": "playwright install --with-deps || npx playwright install --with-deps || true"
   },
   "eslintConfig": {
     "extends": "react-app"
